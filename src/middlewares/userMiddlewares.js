@@ -1,5 +1,5 @@
 const bcryptjs = require("bcryptjs")
-
+const jwt = require("jsonwebtoken")
 const Service = require("../services/Services")
 const service = new Service("User")
 
@@ -25,9 +25,9 @@ const authUser = async (req,res,next) => {
         if(!user) return res.status(401).json({results: "E-mail ou senha incorreto"})
 
         const compare = bcryptjs.compare(password, user.password)
-
         if(compare){
             const payload = {id: user.id, email: user.email}
+            console.log(payload)
             next(payload)
         }else{
             return res.status(401).json({results: "E-mail ou senha incorreto"})
@@ -37,7 +37,19 @@ const authUser = async (req,res,next) => {
     }
 }
 
+const checkToken = async (req, res, next) => {
+    const {token} = req.headers
+    try {
+        const verify = jwt.verify(token, process.env.SECRET_TOKEN)
+        next(verify)
+    } catch (error) {
+        return res.status(401).json({results: "Token inválido", status: 401})
+    }
+}
+
+
 module.exports = {
     encryptedPassword,
-    authUser
+    authUser,
+    checkToken
 }

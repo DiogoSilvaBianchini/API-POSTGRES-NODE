@@ -26,6 +26,7 @@ class UserController{
 
     static async createToken (payload, req,res,next){
         try {
+            console.log(payload)
             const token = await jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: "4h"})
             return res.status(200).json({results: token, status: 200})
         } catch (error) {
@@ -43,19 +44,17 @@ class UserController{
         }
     }
 
-    static async deleteUserById(req,res,next){
-        const {id} = req.params
+    static async deleteUserById(token,req,res,next){
         try {
-            await service.removeById(id)
+            await service.removeById(token.id)
             return res.status(201).json({message: "Usuario removido com sucesso", status: 201})
         } catch (error) {
             next(error)
         }
     }
 
-    static async updateUser(req, res, next){
+    static async updateUser(token, req, res, next){
         const {email, password} = req.body
-        const {id} = req.params
         const payload = {}
         
         if(email){
@@ -72,7 +71,7 @@ class UserController{
         }
 
         try {
-            const update = await service.updateById(id, payload)
+            const update = await service.updateById(token.id, payload)
             if(update == 0){
                 return res.status(401).json({results: "Usuario não existe", status: 401})
             }else{
