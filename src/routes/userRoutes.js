@@ -4,7 +4,6 @@ const {encryptedPassword, authUser, checkToken} = require("../middlewares/userMi
 const router = express.Router()
 
 router.get("/", UserController.getAllUsers)
-router.get("/test", checkToken)
 router.get("/:id", UserController.getUserById)
 
 router.post("/", express.json(), encryptedPassword, UserController.createNewUser)

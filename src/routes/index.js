@@ -1,9 +1,10 @@
 const userRouter = require("./userRoutes")
+const productRouter = require("./productRouter")
 const morgan = require("morgan")
 
 module.exports = routes = (app) => {
     //Routes
-    app.use(morgan("dev"), userRouter)
+    app.use(morgan("dev"), userRouter, productRouter)
 
     // Error handdle
     app.use((error, req, res, next) => {
