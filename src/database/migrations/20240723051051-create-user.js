@@ -13,13 +13,19 @@ module.exports = {
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       password: {
         type: Sequelize.STRING
       },
       buy_list: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        default: []
+      },
+      favority_list: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        default: []
       },
       createdAt: {
         allowNull: false,

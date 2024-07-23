@@ -21,9 +21,11 @@ module.exports = {
       category: {
         type: Sequelize.INTEGER
       },
-      img: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
+      imgs: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        default: []
       },
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.ARRAY(Sequelize.INTEGER)
