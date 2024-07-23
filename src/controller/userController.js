@@ -1,23 +1,43 @@
 const bcryptjs = require("bcryptjs")
-const Service = require("../services/Services")
+const jwt = require("jsonwebtoken")
 
+const Service = require("../services/Services")
 const service = new Service("User")
 
 class UserController{
-    static async createNewUser(hash, req, res, next){
-        const {name, email} = req.body
+    static async getAllUsers(req,res,next){
         try {
-            await service.createNewRegister({name, email, password: hash})
-            return res.status(201).json({results: "Usuario criado com sucesso", status: 201})
+            const users = await service.findAll()
+            return res.status(200).json({results: users, status: 200}) 
         } catch (error) {
             next(error)
         }
     }
 
-    static async getAllUsers(req,res,next){
+    static async getUserById(req,res,next){
+        const {id} = req.params
         try {
-            const users = await service.findAll()
-            return res.status(200).json({results: users, status: 200}) 
+            const user = await service.findById(id)
+            return res.status(200).json({results: user, status: 200})
+        } catch (error) {
+            
+        }
+    }
+
+    static async createToken (payload, req,res,next){
+        try {
+            const token = await jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: "4h"})
+            return res.status(200).json({results: token, status: 200})
+        } catch (error) {
+            next(error)   
+        }
+    }
+
+    static async createNewUser(hash, req, res, next){
+        const {name, email} = req.body
+        try {
+            await service.createNewRegister({name, email, password: hash})
+            return res.status(201).json({results: "Usuario criado com sucesso", status: 201})
         } catch (error) {
             next(error)
         }

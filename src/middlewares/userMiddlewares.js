@@ -1,5 +1,8 @@
 const bcryptjs = require("bcryptjs")
 
+const Service = require("../services/Services")
+const service = new Service("User")
+
 const encryptedPassword = async (req,res,next) => {
     const {password} = req.body
     let hash = null
@@ -14,6 +17,27 @@ const encryptedPassword = async (req,res,next) => {
     }
 }
 
+const authUser = async (req,res,next) => {
+    const {email, password} = req.body
+
+    try {
+        const user = await service.findOne({email})
+        if(!user) return res.status(401).json({results: "E-mail ou senha incorreto"})
+
+        const compare = bcryptjs.compare(password, user.password)
+
+        if(compare){
+            const payload = {id: user.id, email: user.email}
+            next(payload)
+        }else{
+            return res.status(401).json({results: "E-mail ou senha incorreto"})
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
-    encryptedPassword
+    encryptedPassword,
+    authUser
 }
