@@ -20,6 +20,28 @@ class CategoryController{
             next(error)
         }
     }
+
+    static async updateCategory(req,res,next){
+        const {id} = req.params
+        const {name} = req.body
+        
+        try {
+            await service.updateById(id, {name})
+            return res.status(201).json({results: "Categoria Atualizada com sucesso", status: 201})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async removeCategory(req,res,next){
+        const {id} = req.params
+        try {
+            await service.removeById(id)
+            return res.status(201).json({results: "Categoria removida", status: 201})
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = CategoryController

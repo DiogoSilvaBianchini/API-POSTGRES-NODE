@@ -5,6 +5,8 @@ const uploadImage = require("../middlewares/multerUploadAws")
 
 router.get("/product", ProductController.findAllProduct)
 router.get("/product/:id", ProductController.findById)
+router.get("/product/category/:categoryId", ProductController.findByCategory)
+
 router.post("/product", uploadImage.array("imgs"), ProductController.createNewProduct)
 router.put("/product/:id", uploadImage.array("imgs"), ProductController.updateProduct)
 router.delete("/product/:id", ProductController.removeProduct)

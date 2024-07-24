@@ -48,6 +48,24 @@ class ProductController{
         }
     }
 
+    static async findByCategory(req,res,next){
+        const {categoryId} = req.params
+
+        try {
+            let products = await services.findAll({where: {
+                categoryId: categoryId
+            }})
+
+            if(products.length == 0){
+                products = "Nenhum produto encontrado"
+            }
+
+            return res.status(200).json({results: products, status: 200})
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async createNewProduct(req,res,next){
         const {title, describe, price, categoryId} = req.body
         const imgsKeyAws = req.files.map(img => img.key)
