@@ -5,12 +5,12 @@ class Services{
         this.model = model
     }
 
-    async findAll(){
+    async findAll(options){
         try {
-            const results = await db[this.model].findAll()
+            const results = await db[this.model].findAll(options)
             return results
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     }
 
@@ -19,16 +19,16 @@ class Services{
             const results = await db[this.model].findOne({where: querry})
             return results
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     }
 
-    async findById(id){
+    async findById(id, querry){
         try {
-            const results = await db[this.model].findByPk(id)
+            const results = await db[this.model].findByPk(id, querry)
             return results
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     }
 
@@ -37,8 +37,7 @@ class Services{
             await db[this.model].create(body)
             return true
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     }
 
@@ -47,8 +46,7 @@ class Services{
             const update = await db[this.model].update(body, {where: {id}})
             return update
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     }
 
@@ -57,8 +55,7 @@ class Services{
             await db[this.model].destroy({where: {id: Number(id)}})
             return true
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     }
 }

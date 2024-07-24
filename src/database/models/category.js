@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     static associate(models) {
-      Category.hasMany(models.Product)
+      Category.hasMany(models.Product, {foreignKey: "categoryId"})
     }
   }
   Category.init({
@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Category',
+    tableName: "categories"
   });
   return Category;
 };

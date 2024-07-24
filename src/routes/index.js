@@ -1,10 +1,15 @@
 const userRouter = require("./userRoutes")
 const productRouter = require("./productRouter")
+const categoryRouter = require("./categoryRoutes")
 const morgan = require("morgan")
 
 module.exports = routes = (app) => {
     //Routes
-    app.use(morgan("dev"), userRouter, productRouter)
+    app.use(
+        morgan("dev"), 
+        userRouter, 
+        productRouter, 
+        categoryRouter)
 
     // Error handdle
     app.use((error, req, res, next) => {
