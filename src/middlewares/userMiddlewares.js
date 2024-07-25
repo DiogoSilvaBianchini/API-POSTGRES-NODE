@@ -38,10 +38,10 @@ const authUser = async (req,res,next) => {
 }
 
 const checkToken = async (req, res, next) => {
-    const {token} = req.headers
+    const {token: userToken} = req.headers
     try {
-        const verify = jwt.verify(token, process.env.SECRET_TOKEN)
-        next(verify)
+        jwt.verify(userToken, process.env.SECRET_TOKEN)
+        next()
     } catch (error) {
         return res.status(401).json({results: "Token inválido", status: 401})
     }

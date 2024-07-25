@@ -2,13 +2,16 @@ const express = require("express")
 const router = express.Router()
 const ProductController = require("../controller/productController")
 const uploadImage = require("../middlewares/multerUploadAws")
+const { checkToken } = require("../middlewares/userMiddlewares")
+const { registerFormValidation } = require("../middlewares/productMiddlewares")
+const {validate} = require("express-validation")
 
 router.get("/product", ProductController.findAllProduct)
 router.get("/product/:id", ProductController.findById)
 router.get("/product/category/:categoryId", ProductController.findByCategory)
 
-router.post("/product", uploadImage.array("imgs"), ProductController.createNewProduct)
-router.put("/product/:id", uploadImage.array("imgs"), ProductController.updateProduct)
-router.delete("/product/:id", ProductController.removeProduct)
+router.post("/product", uploadImage.array("imgs"), validate(registerFormValidation, {} , {}), checkToken, ProductController.createNewProduct)
+router.put("/product/:id", uploadImage.array("imgs"), checkToken, ProductController.updateProduct)
+router.delete("/product/:id", checkToken, ProductController.removeProduct)
 
 module.exports = router
