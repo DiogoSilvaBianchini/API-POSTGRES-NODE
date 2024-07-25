@@ -1,19 +1,16 @@
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const Service = require("../services/Services")
+const { Joi } = require("express-validation")
 const service = new Service("User")
 
-const encryptedPassword = async (req,res,next) => {
-    const {password} = req.body
-    let hash = null
+const encryptedPassword = async (password) => {
     try {
-        if(password){
-            const salt = await bcryptjs.genSalt(10)
-            hash = await bcryptjs.hash(password, salt)
-        }
-        next(hash)
+        const salt = await bcryptjs.genSalt(10)
+        hash = await bcryptjs.hash(password, salt)
+        return hash
     } catch (error) {
-        next(error)
+        throw new Error(error)
     }
 }
 
@@ -47,9 +44,40 @@ const checkToken = async (req, res, next) => {
     }
 }
 
+const userRegisterFormValidation = {
+    body: Joi.object({
+        name: 
+            Joi.string()
+            .required(),
+        email: 
+            Joi.string()
+            .email()
+            .required(),
+        password:
+            Joi.string()
+            .min(8)
+            .max(30)
+            .regex(/[a-zA-Z0-9]/)
+            .required()
+    })
+}
+
+const userLoginFormValidation = {
+    body: Joi.object({
+        email: 
+            Joi.string()
+            .email()
+            .required(),
+        password:
+            Joi.string()
+            .required()
+    })
+}
 
 module.exports = {
     encryptedPassword,
     authUser,
-    checkToken
+    checkToken,
+    userRegisterFormValidation,
+    userLoginFormValidation
 }

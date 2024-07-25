@@ -24,6 +24,10 @@ module.exports = routes = (app) => {
                 msgError = `O campo ${fieldError} não pode estar vazio.`
             }
 
+            if(typeError.includes("min")){
+                msgError = `O campo ${fieldError} precisar ter no minimo 8 caracteres.`
+            }
+
             return res.status(error.statusCode).json({results: msgError, status: error.statusCode})
         }
         return res.status(500).json({results: "Algo de errado", status: 500})

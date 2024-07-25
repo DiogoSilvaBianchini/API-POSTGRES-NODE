@@ -2,6 +2,7 @@ const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 const Service = require("../services/Services")
+const { encryptedPassword } = require("../middlewares/userMiddlewares")
 const service = new Service("User")
 
 class UserController{
@@ -34,9 +35,10 @@ class UserController{
         }
     }
 
-    static async createNewUser(hash, req, res, next){
-        const {name, email} = req.body
+    static async createNewUser(req, res, next){
+        const {name, email, password} = req.body
         try {
+            const hash = await encryptedPassword(password)
             await service.createNewRegister({name, email, password: hash})
             return res.status(201).json({results: "Usuario criado com sucesso", status: 201})
         } catch (error) {
