@@ -21,11 +21,12 @@ const authUser = async (req,res,next) => {
         const user = await service.findOne({email})
         if(!user) return res.status(401).json({results: "E-mail ou senha incorreto"})
 
-        const compare = bcryptjs.compare(password, user.password)
+        const compare = await bcryptjs.compare(password, user.password)
+        
         if(compare){
             const payload = {id: user.id, email: user.email}
-            console.log(payload)
-            next(payload)
+            req.payload = payload
+            next()
         }else{
             return res.status(401).json({results: "E-mail ou senha incorreto"})
         }
@@ -35,9 +36,12 @@ const authUser = async (req,res,next) => {
 }
 
 const checkToken = async (req, res, next) => {
-    const {token: userToken} = req.headers
+    const {authorization} = req.headers
+    
     try {
-        jwt.verify(userToken, process.env.SECRET_TOKEN)
+        const bearerToken = authorization.split(" ", 2)[1]
+        const token = await jwt.verify(bearerToken, process.env.SECRET_TOKEN)
+        req.token = token
         next()
     } catch (error) {
         return res.status(401).json({results: "Token inválido", status: 401})
@@ -62,22 +66,9 @@ const userRegisterFormValidation = {
     })
 }
 
-const userLoginFormValidation = {
-    body: Joi.object({
-        email: 
-            Joi.string()
-            .email()
-            .required(),
-        password:
-            Joi.string()
-            .required()
-    })
-}
-
 module.exports = {
     encryptedPassword,
     authUser,
     checkToken,
-    userRegisterFormValidation,
-    userLoginFormValidation
+    userRegisterFormValidation
 }

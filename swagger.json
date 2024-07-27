@@ -1,0 +1,195 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API POSTGRES",
+        "description": "Manipulação e gerenciamento do banco de dados POSTSQL",
+        "termsOfService": "http://localhost:8082/terms",
+        "contact": {
+            "email": "diogosilvabianchini@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8082",
+            "description": "API de desenvolvimento"
+        }
+    ],
+    "paths": {
+        "/product": {
+            "get": {
+                "sumarry": "Buscar todos os produtos",
+                "description": "Buscar Todos os produtos registrados",
+                "tags": ["Products"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductSchema"
+                                },
+                                "examples": {
+                                    "product": {
+                                        "$ref": "#/components/schemas/ProductExemple"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "sumarry": "Cadastro de produtos.",
+                "description": "Rota para cadastros de novos produtos.",
+                "tags": ["Products"],
+                "security": [{"bearerAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            },
+                            "examples": {
+                                "product": {
+                                    "value": {
+                                        "title": "Gabinete gamer LED azul",
+                                        "description": "Gabinete Gamer branco com 5 coolers e LED azuis",
+                                        "price": "250.80",
+                                        "imgs": ["imgs/imagem_do_produto1.webp","imgs/imagem_do_produto2.webp"],
+                                        "categoryId" : 2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unathorazed"
+                    },
+                    "400": {
+                        "description": "Product Already exist"
+                    },
+                    "201": {
+                        "description": "Created Sucsess",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "sumarry": "Buscar todos os usuario",
+                "description": "A rota de buscar todos os usuarios são desenvolvidas para uso de desenvolvimento e para uso do cliente.",
+                "tags": ["users"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ProductSchema": {
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "title": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "imgs": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string" 
+                                    }
+                                },
+                                "categoryId": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "status": {
+                        "type": "number"
+                    }
+                }
+            },
+            "ProductExemple": {
+                "value": {
+                    "results": [
+                        {
+                            "title": "Gabinete gamer LED azul",
+                            "description": "Gabinete Gamer branco com 5 coolers e LED azuis",
+                            "price": "250.80",
+                            "imgs": ["imgs/imagem_do_produto1.webp","imgs/imagem_do_produto2.webp"],
+                            "categoryId" : 2
+                        },
+                        {
+                            "title": "Placa de video RTX 2080",
+                            "description": "Placa de video Nvidia motdelo RTX 2080",
+                            "price": "4500.80",
+                            "imgs": ["imgs/imagem_do_produto5.webp","imgs/imagem_do_produto6.webp"],
+                            "categoryId" : 3
+                        }
+                    ],
+                    "status": 200
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
+

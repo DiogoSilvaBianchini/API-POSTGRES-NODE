@@ -1,8 +1,8 @@
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const { encryptedPassword } = require("../middlewares/userMiddlewares")
 
 const Service = require("../services/Services")
-const { encryptedPassword } = require("../middlewares/userMiddlewares")
 const service = new Service("User")
 
 class UserController{
@@ -25,10 +25,9 @@ class UserController{
         }
     }
 
-    static async createToken (payload, req,res,next){
+    static async createToken (req,res,next){
         try {
-            console.log(payload)
-            const token = await jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: "4h"})
+            const token = await jwt.sign(req.payload, process.env.SECRET_TOKEN, {expiresIn: "4h"})
             return res.status(200).json({results: token, status: 200})
         } catch (error) {
             next(error)   
@@ -46,17 +45,19 @@ class UserController{
         }
     }
 
-    static async deleteUserById(token,req,res,next){
+    static async deleteUserById(req,res,next){
         try {
-            await service.removeById(token.id)
+            const token = req.headers.authorization
+            await service.removeById(token)
             return res.status(201).json({message: "Usuario removido com sucesso", status: 201})
         } catch (error) {
             next(error)
         }
     }
 
-    static async updateUser(token, req, res, next){
+    static async updateUser(req, res, next){
         const {email, password} = req.body
+        const token = req.token
         const payload = {}
         
         if(email){

@@ -7,8 +7,7 @@ const { registerFormValidation } = require("../middlewares/productMiddlewares")
 const {validate} = require("express-validation")
 
 router.get("/product", ProductController.findAllProduct)
-router.get("/product/:id", ProductController.findById)
-router.get("/product/category/:categoryId", ProductController.findByCategory)
+router.get("/product/filter", ProductController.findForFilter)
 
 router.post("/product", uploadImage.array("imgs"), validate(registerFormValidation, {} , {}), checkToken, ProductController.createNewProduct)
 router.put("/product/:id", uploadImage.array("imgs"), checkToken, ProductController.updateProduct)

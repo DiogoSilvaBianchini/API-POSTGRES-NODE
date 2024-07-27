@@ -4,6 +4,7 @@ const services = new Services("Product")
 const removeImgByKey = require("../utils/removeImgByKey")
 const db = require("../database/models/index")
 const { query } = require("express")
+const queryBuilder = require("../utils/queryBuilder")
 
 const populateCategory = {
     include: {
@@ -28,39 +29,25 @@ const agreeNewImages = async (id, newImgs) => {
 }
 
 class ProductController{
-    static async findById(req, res, next){
-        const {id} = req.params
+    static async findForFilter(req,res,next){
+        const {id, title, category} = req.query
         try {
-            const product = await services.findById(id, populateCategory)
-            if(!product) return res.status(400).json({results: "Produto não encontrado", status: 400})
-            return res.status(200).json({results: product, status: 200})
-        } catch (error) {
-            next(error)
-        }
-    } 
+            const query = {id: Number(id), title, categoryId: category}
+            const list = queryBuilder(query)
+            const product = await services.findOne(list)
 
-    static async findAllProduct(req, res, next){
-        try {
-            const products = await services.findAll(populateCategory)
-            return res.status(200).json({results: products, stauts: 200})
+            const results = product ? product : []
+
+            return res.status(200).json({results, status: 200})
         } catch (error) {
             next(error)
         }
     }
 
-    static async findByCategory(req,res,next){
-        const {categoryId} = req.params
-
+    static async findAllProduct(req, res, next){
         try {
-            let products = await services.findAll({where: {
-                categoryId: categoryId
-            }})
-
-            if(products.length == 0){
-                products = "Nenhum produto encontrado"
-            }
-
-            return res.status(200).json({results: products, status: 200})
+            const products = await services.findAll(populateCategory)
+            return res.status(200).json({results: products, stauts: 200})
         } catch (error) {
             next(error)
         }

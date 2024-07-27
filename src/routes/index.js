@@ -3,9 +3,14 @@ const productRouter = require("./productRouter")
 const categoryRouter = require("./categoryRoutes")
 const morgan = require("morgan")
 const { ValidationError } = require("express-validation")
+const swaaggerUi = require("swagger-ui-express")
+const swaggerConfig = require("../../swagger.json")
 
 module.exports = routes = (app) => {
-    //Routes
+    //Routes da documentação
+    app.use("/api-docs", swaaggerUi.serve, swaaggerUi.setup(swaggerConfig))
+
+    //Routes de Serviço
     app.use(
         morgan("dev"), 
         userRouter, 
