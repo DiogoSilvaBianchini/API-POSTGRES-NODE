@@ -1,4 +1,4 @@
-const s3 = require("../database/config/awsConfig")
+const s3 = require("../config/awsConfig")
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3")
 
 module.exports = removeImageByKey = async (files) => {

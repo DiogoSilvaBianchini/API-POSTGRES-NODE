@@ -8,7 +8,7 @@ const service = new Service("User")
 class UserController{
     static async getAllUsers(req,res,next){
         try {
-            const users = await service.findAll()
+            const users = await service.findAll({attributes: {exclude: ["password"]}})
             return res.status(200).json({results: users, status: 200}) 
         } catch (error) {
             next(error)

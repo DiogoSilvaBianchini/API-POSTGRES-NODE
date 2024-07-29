@@ -27,7 +27,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ProductSchema"
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "results": {
+                                                "type": "object"
+                                            },
+                                            "status": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
                                 },
                                 "examples": {
                                     "product": {
@@ -48,7 +58,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Product"
+                                "$ref": "#/components/schemas/ProductSchema"
                             },
                             "examples": {
                                 "product": {
@@ -65,19 +75,86 @@
                     }
                 },
                 "responses": {
-                    "401": {
-                        "description": "Unathorazed"
-                    },
-                    "400": {
-                        "description": "Product Already exist"
-                    },
                     "201": {
-                        "description": "Created Sucsess",
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "$ref": "#/components/schemas/Product"
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "results": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Product created ": {
+                                        "value": {
+                                            "results": "Produto adicionado com sucesso",
+                                            "status": 201
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "results": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Token invalid": {
+                                        "value": {
+                                            "results": "Token inválido",
+                                            "status": 401
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "describe": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "results": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "number"
+                                            } 
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Erro interno": {
+                                        "value": {
+                                            "results": "Erro interno do servidor",
+                                            "status": 500
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -100,7 +177,28 @@
                                     "items": {
                                         "$ref": "#/components/schemas/User"
                                     }
+                                },
+                                "examples": {
+                                    "Get users": {
+                                        "value": {
+                                            "id": 5,
+                                            "name": "Username",
+                                            "email": "user@mail.com",
+                                            "buy_list": [],
+                                            "favority_list": [],
+                                            "createdAt": "2024-07-27T05:41:59.296Z",
+                                            "updatedAt": "2024-07-27T05:52:26.845Z"
+                                        }
+                                    }
                                 }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/InternalError"
                             }
                         }
                     }
@@ -181,6 +279,30 @@
                         }
                     }
                 }
+            },
+            "InternalError": {
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "properties": {
+                            "results": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "examples": {
+                    "Internal Error": {
+                        "value": {
+                            "results": "Erro interno do servidor",
+                            "status": 500
+                        }
+                    }
+                }
+                
             }
         },
         "securitySchemes": {

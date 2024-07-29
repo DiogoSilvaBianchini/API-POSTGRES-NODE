@@ -1,4 +1,4 @@
-const s3Config = require("../database/config/awsConfig")
+const s3Config = require("../config/awsConfig")
 const multer = require("multer")
 const multerS3 = require("multer-s3")
 
